@@ -1,0 +1,20 @@
+[package]
+name = "blinky"
+version = "0.1.0"
+authors = ["Yanis B <yanis.baouche@edu.devinci.fr>"]
+edition = "2021"
+
+# Define the binary target
+[[bin]]
+name = "blinky"
+path = "src/main.rs"  # This points to the file where your main function is defined
+
+[dependencies]
+embedded-hal = { version = "0.2", features = ["unproven"] }  # Activer la feature "unproven"
+avr-device = { version = "0.3", features = ["atmega328p"] }
+
+[profile.release]
+panic = "abort"
+codegen-units = 1
+lto = false  # Disable link-time optimization temporarily
+opt-level = 1  # Lower the optimization level to 1

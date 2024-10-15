@@ -1,0 +1,11 @@
+/home/yanis/RustroverProjects/untitled/blinky/target/avr-unknown-gnu-atmega328/release/deps/libavr_device-127ad7a11138a723.rmeta: /home/yanis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/avr-device-0.3.4/src/lib.rs /home/yanis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/avr-device-0.3.4/src/asm.rs /home/yanis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/avr-device-0.3.4/src/interrupt.rs /home/yanis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/avr-device-0.3.4/src/generic.rs /home/yanis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/avr-device-0.3.4/src/devices/mod.rs
+
+/home/yanis/RustroverProjects/untitled/blinky/target/avr-unknown-gnu-atmega328/release/deps/libavr_device-127ad7a11138a723.rlib: /home/yanis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/avr-device-0.3.4/src/lib.rs /home/yanis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/avr-device-0.3.4/src/asm.rs /home/yanis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/avr-device-0.3.4/src/interrupt.rs /home/yanis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/avr-device-0.3.4/src/generic.rs /home/yanis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/avr-device-0.3.4/src/devices/mod.rs
+
+/home/yanis/RustroverProjects/untitled/blinky/target/avr-unknown-gnu-atmega328/release/deps/avr_device-127ad7a11138a723.d: /home/yanis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/avr-device-0.3.4/src/lib.rs /home/yanis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/avr-device-0.3.4/src/asm.rs /home/yanis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/avr-device-0.3.4/src/interrupt.rs /home/yanis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/avr-device-0.3.4/src/generic.rs /home/yanis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/avr-device-0.3.4/src/devices/mod.rs
+
+/home/yanis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/avr-device-0.3.4/src/lib.rs:
+/home/yanis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/avr-device-0.3.4/src/asm.rs:
+/home/yanis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/avr-device-0.3.4/src/interrupt.rs:
+/home/yanis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/avr-device-0.3.4/src/generic.rs:
+/home/yanis/.cargo/registry/src/index.crates.io-6f17d22bba15001f/avr-device-0.3.4/src/devices/mod.rs:
