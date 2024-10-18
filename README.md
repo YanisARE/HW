@@ -8,7 +8,6 @@ You should now have a .elf file in target/avr-unknown-gnu-atmega328/release
 
 Finally, we can execute this code with qemu:
 
-
 qemu-system-avr -machine uno -bios target/avr-unknown-gnu-atmega328/release/simple_blink.elf -s -S
 
 Then in another shell with gdb : 
