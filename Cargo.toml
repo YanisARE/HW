@@ -14,7 +14,9 @@ opt-level = "z"
 target = "avr-atmega328p.json"
 
 [dependencies]
-cortex-m-rt = "0.7.3"
+avr-device = { version = "0.6", features = ["atmega328p"] }
+panic-halt = "0.2"
+
 
 [unstable]
 build-std = ["core"]
