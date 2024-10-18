@@ -1,35 +1,14 @@
 {
-  "llvm-target": "avr-atmega328p",
-  "target-endian": "little",
-  "target-pointer-width": "16",
-  "data-layout": "e-P1-p:16:8-i8:8-i16:8-i32:8-i64:8-f32:8-f64:8-n8-a:8",
+  "llvm-target": "avr-unknown-unknown",
+  "data-layout": "e-m:e-p:16:16-i8:8:8-i16:16",
   "arch": "avr",
   "os": "none",
-  "executables": true,
-  "linker": "avr-gcc",
-  "cpu": "atmega328p",
-  "max-atomic-width": 8,
-  "features": "",
+  "vendor": "unknown",
   "linker-flavor": "gcc",
+  "linker": "avr-gcc",
   "pre-link-args": {
-    "gcc": [
-      "-mmcu=atmega328p"
-    ]
+    "gcc": ["-Wl,-Tlinker_script.ld"]
   },
-  "post-link-args": {
-    "gcc": [
-      "-Wl,--gc-sections",
-      "-nostartfiles",
-      "-nodefaultlibs",
-      "-Wl,-z,noexecstack"
-    ]
-  },
-  "linker-args": {
-    "gcc": [
-      "-Wl,--strip-debug",
-      "-no-pie",
-      "-Wl,--gc-sections"
-    ]
-  },
-  "no-compiler-rt": true
+  "features": "+avr5",
+  "target-endian": "little"
 }

@@ -1,1 +1,0 @@
-{"rustc":1317606298140335667,"features":"","target":0,"profile":0,"path":0,"deps":[[13759009468538946253,"build_script_build",false,6658610588648292377]],"local":[{"RerunIfChanged":{"output":"avr-unknown-gnu-atmega328/debug/build/avr-device-0feb640c3db37284/output","paths":["build.rs"]}}],"rustflags":[],"metadata":0,"config":0,"compile_kind":0}

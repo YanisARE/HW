@@ -3,7 +3,5 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/qemu-avr" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/qemu-avr/pixman" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/qemu-avr/simavr" vcs="Git" />
   </component>
 </project>
