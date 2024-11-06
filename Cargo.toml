@@ -1,5 +1,5 @@
 [package]
-name = "simple_blink"
+name = "GPIO"
 version = "0.1.0"
 edition = "2021"
 
@@ -10,22 +10,11 @@ opt-level = "z"
 [profile.dev]
 opt-level = "z"
 
-[build]
-target = "avr-atmega328p.json"
-
-[dependencies]
-avr-device = { version = "0.6", features = ["atmega328p"] }
-panic-halt = "0.2"
-
-
 [unstable]
 build-std = ["core"]
 
-[target.avr-atmega328p]
-linker = "avr-gcc"
-rustflags = [
-    "-C", "link-arg=-nostartfiles",
-    "-C", "link-arg=-nodefaultlibs",
-    "-C", "link-arg=-Wl,--gc-sections",
-    "-C", "link-arg=-Wl,-z,noexecstack",
-]
+[dependencies]
+cortex-m = "0.6.0"
+cortex-m-rt = "0.6.10"
+cortex-m-semihosting = "0.3.3"
+panic-halt = "0.2.0"

@@ -4,6 +4,8 @@ You first have to build the project with the next command (you may have installe
 
 cargo +nightly build -Z build-std=core --target avr-unknown-gnu-atmega328 --release
 
+cargo +nightly build -Z build-std=core --target thumbv7em-none-eabihf --release
+
 You should now have a .elf file in target/avr-unknown-gnu-atmega328/release
 
 Finally, we can execute this code with qemu:

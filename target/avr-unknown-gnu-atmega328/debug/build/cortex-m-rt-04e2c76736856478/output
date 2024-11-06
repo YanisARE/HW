@@ -1,0 +1,3 @@
+cargo:rustc-link-search=C:\Users\Nizar\Desktop\HW\HW\target\avr-unknown-gnu-atmega328\debug\build\cortex-m-rt-04e2c76736856478\out
+cargo:rerun-if-changed=build.rs
+cargo:rerun-if-changed=link.x.in
