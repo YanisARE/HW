@@ -1,24 +1,30 @@
 #![no_std]
 #![no_main]
 
-use panic_halt as _; // Panic handler
-use avr_device::atmega328p::Peripherals;
+mod gpio;
+use gpio::{GpioPin, PinMode};
+
+#[panic_handler]
+fn panic(_info: &core::panic::PanicInfo) -> ! {
+    loop {}
+}
 
 #[no_mangle]
 pub extern "C" fn main() -> ! {
-    let dp = Peripherals::take().unwrap();
-    let portb = &dp.PORTB;
+    const PORTB: *mut u8 = 0x25 as *mut u8; // Adresse du registre PORTB
+    const DDRB: *mut u8 = 0x24 as *mut u8;  // Adresse du registre DDRB
 
-    // Configurer PB4 comme sortie
-    portb.ddrb.write(|w| w.pb4().set_bit());
+    let mut output_pin = GpioPin::new(PORTB, DDRB, 2, PinMode::Output);
+    let input_pin_pullup = GpioPin::new(PORTB, DDRB, 3, PinMode::InputPullUp);
+
+    output_pin.write(true);
 
     loop {
-        // Allumer PB4
-        portb.portb.write(|w| w.pb4().set_bit());
-        for _ in 0..1_000_000 {}
-
-        // Éteindre PB4
-        portb.portb.write(|w| w.pb4().clear_bit());
-        for _ in 0..1_000_000 {}
+        let input_state = input_pin_pullup.read();
+        if input_state {
+            output_pin.write(false);
+        } else {
+            output_pin.write(true);
+        }
     }
 }
