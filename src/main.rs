@@ -14,20 +14,26 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {
 
 #[entry]
 fn main() -> ! {
-    hprintln!("Hello, world!\n").ok();  // .ok() permet de traiter le résultat de hprintln sans erreur.
+    hprintln!("Hello, world!\n").ok();  // Affiche un message de démarrage
 
+    // Définitions des registres pour le PORTB et DDRB
     const PORTB: *mut u8 = 0x25 as *mut u8; // Adresse du registre PORTB
     const DDRB: *mut u8 = 0x24 as *mut u8;  // Adresse du registre DDRB
 
+    // Initialisation de la broche 2 en mode sortie
     let output_pin = GpioPin::new(PORTB, DDRB, 2, PinMode::Output);
+    // Initialisation de la broche 3 en mode entrée avec pull-up
     let input_pin_pullup = GpioPin::new(PORTB, DDRB, 3, PinMode::InputPullUp);
 
+    // Mise à 1 de la broche de sortie
     output_pin.write(true);
 
     let mut last_state = input_pin_pullup.read();
+    hprintln!("Initial input state: {:?}", last_state).ok(); // Affiche l'état initial
 
     loop {
         let input_state = input_pin_pullup.read();
+        hprintln!("Current input state: {:?}", input_state).ok(); // Affiche l'état actuel
 
         // Vérifier si l'état a changé
         if input_state != last_state {
@@ -42,11 +48,13 @@ fn main() -> ! {
             last_state = input_state;
         }
 
-        // Modifier l'état de la broche de sortie en fonction de l'entrée
         if input_state {
-            output_pin.write(false); // Désactive la sortie si l'entrée est à 1
+            output_pin.write(false);
         } else {
-            output_pin.write(true);  // Active la sortie si l'entrée est à 0
+            output_pin.write(true);
         }
+
+        // Petite temporisation pour éviter une boucle trop rapide
+        for _ in 0..1_000_000 {}
     }
 }

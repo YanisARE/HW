@@ -21,8 +21,8 @@ impl GpioPin {
                     ptr::write_volatile(gpio.ddr, ptr::read_volatile(gpio.ddr) | (1 << gpio.pin));
                 }
                 PinMode::InputPullUp => {
-                    ptr::write_volatile(gpio.ddr, ptr::read_volatile(gpio.ddr) & !(1 << gpio.pin));
-                    ptr::write_volatile(gpio.port, ptr::read_volatile(gpio.port) | (1 << gpio.pin));
+                    ptr::write_volatile(gpio.ddr, ptr::read_volatile(gpio.ddr) & !(1 << gpio.pin)); // Configurer comme entrée
+                    ptr::write_volatile(gpio.port, ptr::read_volatile(gpio.port) | (1 << gpio.pin)); // Activer la résistance pull-up
                 }
             }
         }
@@ -40,6 +40,9 @@ impl GpioPin {
     }
 
     pub fn read(&self) -> bool {
-        unsafe { (ptr::read_volatile(self.port) & (1 << self.pin)) != 0 }
+        unsafe {
+            let value = ptr::read_volatile(self.port);
+            (value & (1 << self.pin)) != 0
+        }
     }
 }
