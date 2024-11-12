@@ -14,7 +14,7 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {
 
 #[entry]
 fn main() -> ! {
-    hprintln!("Hello, world!\n").ok();  // Affiche un message de démarrage
+    hprintln!("Welcome to our Rust blink program!\n").ok();
 
     // Définitions des registres pour le PORTB et DDRB
     const PORTB: *mut u8 = 0x25 as *mut u8; // Adresse du registre PORTB
@@ -22,39 +22,29 @@ fn main() -> ! {
 
     // Initialisation de la broche 2 en mode sortie
     let output_pin = GpioPin::new(PORTB, DDRB, 2, PinMode::Output);
-    // Initialisation de la broche 3 en mode entrée avec pull-up
-    let input_pin_pullup = GpioPin::new(PORTB, DDRB, 3, PinMode::InputPullUp);
 
-    // Mise à 1 de la broche de sortie
-    output_pin.write(true);
-
-    let mut last_state = input_pin_pullup.read();
-    hprintln!("Initial input state: {:?}", last_state).ok(); // Affiche l'état initial
+    output_pin.write(false);
 
     loop {
-        let input_state = input_pin_pullup.read();
-        hprintln!("Current input state: {:?}", input_state).ok(); // Affiche l'état actuel
 
-        // Vérifier si l'état a changé
-        if input_state != last_state {
-            // Si l'état a changé, écrivez un message
-            if input_state {
-                hprintln!("Pin is HIGH\n").ok();
-            } else {
-                hprintln!("Pin is LOW\n").ok();
-            }
-
-            // Mettre à jour l'état précédent
-            last_state = input_state;
-        }
-
-        if input_state {
+        let mut state = output_pin.read();
+        if state  {
+            hprintln!("LED is ON").ok();
+            delay_ms(1000);
             output_pin.write(false);
-        } else {
+        }
+        else {
+            hprintln!("LED is OFF").ok();
+            delay_ms(1000);
             output_pin.write(true);
         }
+    }
+}
 
-        // Petite temporisation pour éviter une boucle trop rapide
-        for _ in 0..1_000_000 {}
+// Fonction simple de temporisation (peut varier selon l'environnement)
+fn delay_ms(ms: u32) {
+    for _ in 0..ms * 16_000 { // Boucle approximative pour 1 ms à 16 MHz
+        // NOP ou simplement laisser la boucle vide
+        unsafe { core::arch::asm!("nop") }
     }
 }
