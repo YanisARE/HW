@@ -29,11 +29,11 @@ pub extern "C" fn main()
 
         let mut state = output_pin.read();
         if state  {
-            delay_ms(1000);
+            delay_ms(100);
             output_pin.write(false);
         }
         else {
-            delay_ms(1000);
+            delay_ms(100);
             output_pin.write(true);
         }
     }
