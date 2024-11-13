@@ -1,27 +1,27 @@
 #![no_std]
 #![no_main]
+#![feature(asm_experimental_arch)]
+
 
 mod gpio;
 use gpio::{GpioPin, PinMode};
 
-use cortex_m_semihosting::hprintln;
-use cortex_m_rt::entry;
 
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
     loop {}
 }
 
-#[entry]
-fn main() -> ! {
-    hprintln!("Welcome to our Rust blink program!\n").ok();
+#[no_mangle]
+pub extern "C" fn main()
+    -> ! {
 
     // Définitions des registres pour le PORTB et DDRB
     const PORTB: *mut u8 = 0x25 as *mut u8; // Adresse du registre PORTB
     const DDRB: *mut u8 = 0x24 as *mut u8;  // Adresse du registre DDRB
 
     // Initialisation de la broche 2 en mode sortie
-    let output_pin = GpioPin::new(PORTB, DDRB, 2, PinMode::Output);
+    let output_pin = GpioPin::new(PORTB, DDRB, 5, PinMode::Output);
 
     output_pin.write(false);
 
@@ -29,17 +29,16 @@ fn main() -> ! {
 
         let mut state = output_pin.read();
         if state  {
-            hprintln!("LED is ON").ok();
             delay_ms(1000);
             output_pin.write(false);
         }
         else {
-            hprintln!("LED is OFF").ok();
             delay_ms(1000);
             output_pin.write(true);
         }
     }
 }
+
 
 
 fn delay_ms(ms: u32) {
@@ -48,3 +47,4 @@ fn delay_ms(ms: u32) {
         unsafe { core::arch::asm!("nop") }
     }
 }
+
