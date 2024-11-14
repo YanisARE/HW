@@ -1,48 +1,49 @@
-#![no_std]
-use core::ptr;
-
-pub enum PinMode {
-    Output,
-    InputPullUp,
-}
-
 pub struct GpioPin {
     port: *mut u8,
     ddr: *mut u8,
     pin: u8,
 }
 
+pub enum PinMode {
+    Input,
+    Output,
+}
+
 impl GpioPin {
+    /// Initialise une nouvelle broche GPIO avec le mode spécifié
     pub fn new(port: *mut u8, ddr: *mut u8, pin: u8, mode: PinMode) -> Self {
-        let gpio = GpioPin { port, ddr, pin };
+        let gpio_pin = GpioPin { port, ddr, pin };
+        gpio_pin.set_mode(mode);
+        gpio_pin
+    }
+
+    /// Configure le mode de la broche (entrée ou sortie)
+    pub fn set_mode(&self, mode: PinMode) {
         unsafe {
             match mode {
+                PinMode::Input => {
+                    *self.ddr &= !(1 << self.pin); // Met la broche en entrée
+                }
                 PinMode::Output => {
-                    ptr::write_volatile(gpio.ddr, ptr::read_volatile(gpio.ddr) | (1 << gpio.pin));
-                }
-                PinMode::InputPullUp => {
-                    ptr::write_volatile(gpio.ddr, ptr::read_volatile(gpio.ddr) & !(1 << gpio.pin)); // Configurer comme entrée
-                    ptr::write_volatile(gpio.port, ptr::read_volatile(gpio.port) | (1 << gpio.pin)); // Activer la résistance pull-up
+                    *self.ddr |= 1 << self.pin; // Met la broche en sortie
                 }
             }
         }
-        gpio
     }
 
-    pub fn write(&self, state: bool) {
+    /// Écrit un niveau logique (haut/bas) sur la broche
+    pub fn write(&self, high: bool) {
         unsafe {
-            if state {
-                ptr::write_volatile(self.port, ptr::read_volatile(self.port) | (1 << self.pin));
+            if high {
+                *self.port |= 1 << self.pin; // État haut
             } else {
-                ptr::write_volatile(self.port, ptr::read_volatile(self.port) & !(1 << self.pin));
+                *self.port &= !(1 << self.pin); // État bas
             }
         }
     }
 
+    /// Lit l'état logique de la broche
     pub fn read(&self) -> bool {
-        unsafe {
-            let value = ptr::read_volatile(self.port);
-            (value & (1 << self.pin)) != 0
-        }
+        unsafe { (*self.port & (1 << self.pin)) != 0 }
     }
 }
