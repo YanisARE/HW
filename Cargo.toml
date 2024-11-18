@@ -25,10 +25,6 @@ panic-halt = "0.2.0"
 # version = "0.7.1"
 # this lets you use cargo fix!
 
-[[bin]]
-name = "GPIO"
-test = false
-bench = false
 
 [[bin]]
 name = "atmega"

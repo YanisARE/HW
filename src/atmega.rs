@@ -36,13 +36,15 @@ pub extern "C" fn main() -> ! {
         delay_ms(500);
 
         usart.transmit(b'H'); // Envoie le caractère 'H'
-        usart.transmit(b'i'); // Envoie le caractère 'i'
+        delay_ms(100);
+        usart.transmit(b'i');
+        delay_ms(3000);
 
+        let received: u8 = usart.receive().unwrap_or(0); // 0 est la valeur par défaut en cas de timeout
+        delay_ms(200);
+        usart.transmit(received);
 
-        // receive function not functionnal yet, infinite loop
-        // let received = usart.receive();
-        // usart.transmit(received); // Echo des données reçues
-        // delay_ms(500);
+        delay_ms(200);
 
     }
 }

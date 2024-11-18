@@ -1,5 +1,8 @@
 # Launching the project on your machine
 
+ - For the atmega, you can juste download the ouput.hex file if you want to execute the code, but if you want to modify the code and test it by yourself, you'll have to follow the next steps.
+ - For the thumbv7em-none-eabihf, just run the 2 commands below
+
 ## Arduino Uno (Atmega328p)
 
 You first have to build the project with the next command (you may have installed nightly):
@@ -13,20 +16,15 @@ C:\avr\avr-gcc-14.1.0-x64-windows\bin\avrdude.exe -C C:\avr\avr-gcc-14.1.0-x64-w
 
 With the last command you are flashing a physical Atmega328p card, but if you don't have one, you can execute this code with qemu (next part).
 
-Now, using Putty or another tool, we should have an infinite loop with something like this while the led is blinking (the receive function is not yet functionnal):
+Now, using Putty or another tool, you can see the the card transmit "Hi" to us, then we send data to it (you have 3 seconds to send data), it receive the data and transmit it back to us:
+
 ![img_1.png](img_1.png)
 
-```
-qemu-system-avr -machine uno -bios output.elf -s -S
+### With qemu 
 ```
 
-Then in another shell with gdb : 
-````
-avr-gdb simple_blink.elf
-target remote localhost:1234
-break main
-continue
-````
+```
+
 ## thumbv7em-none-eabihf
 
 ```

@@ -28,16 +28,26 @@ impl Usart {
     /// Transmet un octet via USART
     pub fn transmit(&self, data: u8) {
         unsafe {
-            while (*self.ucsra & (1 << 5)) == 0 {} // Attente de l'envoi précédent
+            // Attente que le registre de données soit vide
+            while (*self.ucsra & (1 << 5)) == 0 {} // Attente du bit UDRE0
+
+            // Transmission des données
             *self.udr = data;
         }
     }
 
+
     /// Reçoit un octet via USART
-    pub fn receive(&self) -> u8 {
+    pub fn receive(&self) -> Option<u8> {
+
+
         unsafe {
-            while (*self.ucsra & (1 << 7)) == 0 {} // Attente d'une donnée
-            *self.udr
+            while (*self.ucsra & (1 << 7)) == 0 {
+
+            }
+            Some(*self.udr) // Donnée reçue
         }
     }
+
+
 }
