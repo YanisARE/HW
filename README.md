@@ -27,7 +27,6 @@ Now, using Putty or another tool, you can see that the card transmit "Hi" to us,
 
 ## thumbv7em-none-eabihf
 
-USART feature not available yet.
 
 ```
 cargo build --target thumbv7em-none-eabihf --bin thumbv7
