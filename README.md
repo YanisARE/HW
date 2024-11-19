@@ -16,7 +16,7 @@ C:\avr\avr-gcc-14.1.0-x64-windows\bin\avrdude.exe -C C:\avr\avr-gcc-14.1.0-x64-w
 
 With the last command you are flashing a physical Atmega328p card, but if you don't have one, you can execute this code with qemu (next part).
 
-Now, using Putty or another tool, you can see the the card transmit "Hi" to us, then we send data to it (you have 3 seconds to send data), it receive the data and transmit it back to us:
+Now, using Putty or another tool, you can see that the card transmit "Hi" to us, then we send data to it (you have 3 seconds to send data), it receives the data and transmit it back to us:
 
 ![img_1.png](img_1.png)
 
@@ -27,7 +27,9 @@ Now, using Putty or another tool, you can see the the card transmit "Hi" to us, 
 
 ## thumbv7em-none-eabihf
 
+USART feature not available yet.
+
 ```
-cargo build --target thumbv7em-none-eabihf --bin main
-cargo run --bin main
+cargo build --target thumbv7em-none-eabihf --bin thumbv7
+cargo run --bin thumbv7
 ```

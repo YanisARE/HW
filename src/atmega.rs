@@ -36,13 +36,14 @@ pub extern "C" fn main() -> ! {
         delay_ms(500);
 
         usart.transmit(b'H'); // Envoie le caractère 'H'
-        delay_ms(100);
+        delay_ms(500);
         usart.transmit(b'i');
-        delay_ms(3000);
 
-        let received: u8 = usart.receive().unwrap_or(0); // 0 est la valeur par défaut en cas de timeout
-        delay_ms(200);
-        usart.transmit(received);
+        if let Some(received) = usart.receive(400) {
+            usart.transmit(received);
+        } else {
+            usart.transmit(b'x');
+        }
 
         delay_ms(200);
 
