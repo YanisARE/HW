@@ -30,5 +30,7 @@ Now, using Putty or another tool, you can see that the card transmit "Hi" to us,
 
 ```
 cargo build --target thumbv7em-none-eabihf --bin thumbv7
+socat -d -d pty,raw,echo=0 pty,raw,echo=0
 cargo run --bin thumbv7
+putty
 ```

@@ -1,6 +1,6 @@
 [target.thumbv7em-none-eabihf]
 # uncomment this to make `cargo run` execute programs on QEMU
-runner = "qemu-system-arm -cpu cortex-m4 -machine mps2-an386 -nographic -semihosting-config enable=on,target=native -serial tcp::1234,server,nowait -kernel target/thumbv7em-none-eabihf/debug/thumbv7"
+runner = "qemu-system-arm -cpu cortex-m4 -machine mps2-an386 -nographic -semihosting-config enable=on,target=native -kernel target/thumbv7em-none-eabihf/debug/thumbv7 -serial /dev/pts/3"
 
 [target.'cfg(all(target_arch = "arm", target_os = "none"))']
 # uncomment ONE of these three option to make `cargo run` start a GDB session

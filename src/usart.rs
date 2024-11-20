@@ -92,16 +92,19 @@ impl Usart {
     /// Transmet un octet via USART
     pub fn transmit(&self, data: u8) {
         unsafe {
-            let sr = self.usart_base.offset(0x00 / 4); // Offset correct pour le registre SR
-            let dr = self.usart_base.offset(0x04 / 4); // Offset correct pour le registre DR
+            let sr = self.usart_base.offset(0x00 / 4); // Offset pour le registre SR
+            let dr = self.usart_base.offset(0x04 / 4); // Offset pour le registre DR
 
             // Attente que le registre de données soit vide (TXE)
             while (*sr & (1 << 7)) == 0 {} // Vérifier le bit TXE (Transmitter Empty)
 
             // Transmission des données
             *dr = data as u32;
+
+
         }
     }
+
 
     /// Reçoit un octet via USART
     pub fn receive(&self, timeout_ms: u16) -> Option<u8> {

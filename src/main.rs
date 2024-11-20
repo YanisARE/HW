@@ -32,31 +32,22 @@ fn main() -> ! {
     // Initialisation de l'USART avec une vitesse de transmission (par exemple 9600 baud)
     let usart = Usart::new(103); // 103 correspond à UBRR pour 9600 baud avec un Fosc de 16 MHz
 
-    // Initialisation de SPI en mode maître
-    let spi = Spi::new();
-    spi.init_master();
-    hprintln!("SPI initialized as Master").ok();
 
-    // Transmission SPI (en boucle pour test)
-    let test_data = 0xAA; // Exemple : envoyer 0xAA
-    hprintln!("Transmitting test data via SPI: {:X}", test_data).ok();
-    spi.transmit(test_data);
-
-    // Réception SPI (boucle fermée pour simuler le retour)
-    let received_data = spi.receive();
-    hprintln!("Received data via SPI: {:X}", received_data).ok();
 
     // Boucle principale
     loop {
         // Allume la LED et attend 1 seconde
         output_pin.write(true);
         hprintln!("LED is ON").ok();
-        delay_ms(500);
+        delay_ms(200);
 
         // Éteint la LED et attend 1 seconde
         output_pin.write(false);
         hprintln!("LED is OFF").ok();
-        delay_ms(500);
+        delay_ms(200);
+
+        hprintln!("Testing USART communication...").ok();
+        delay_ms(100);
 
         // Transmet un message via USART
         usart.transmit(b'H');
@@ -67,7 +58,7 @@ fn main() -> ! {
         hprintln!("Sent 'i' via USART").ok();
 
         // Attendre 3 secondes
-        delay_ms(3000);
+        delay_ms(2500);
 
         // Reçoit un octet via USART
         if let Some(received) = usart.receive(400) { // Attend pendant 400 ms
@@ -78,11 +69,11 @@ fn main() -> ! {
         }
 
         // Test SPI à chaque itération
-        hprintln!("Testing SPI communication...").ok();
-        let data_to_send = 0x55; // Exemple de données à transmettre
-        spi.transmit(data_to_send);
-        let spi_received = spi.receive();
-        hprintln!("SPI sent: {:X}, received: {:X}", data_to_send, spi_received).ok();
+        // hprintln!("Testing SPI communication...").ok();
+        // let data_to_send = 0x55; // Exemple de données à transmettre
+        // spi.transmit(data_to_send);
+        // let spi_received = spi.receive();
+        // hprintln!("SPI sent: {:X}, received: {:X}", data_to_send, spi_received).ok();
 
         // Petite pause avant la prochaine itération
         delay_ms(200);
