@@ -1,4 +1,5 @@
 use core::ptr;
+
 pub struct Spi {
     spcr: *mut u8,   // SPI Control Register
     spsr: *mut u8,   // SPI Status Register
@@ -28,8 +29,13 @@ impl Spi {
             // Écrire dans SPDR pour transmettre les données
             ptr::write_volatile(self.spdr, data);
 
-            // Attendre que la transmission soit terminée
-            while ptr::read_volatile(self.spsr) & 0x80 == 0 {}
+            // Attendre que la transmission soit terminée (SPIF=1)
+            while ptr::read_volatile(self.spsr) & (1 << 7) == 0 {}
+
+            // Vérifier les erreurs (collision par exemple)
+            if ptr::read_volatile(self.spsr) & (1 << 6) != 0 {
+                panic!("SPI collision detected");
+            }
         }
     }
 

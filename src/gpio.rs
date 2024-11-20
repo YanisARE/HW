@@ -71,4 +71,11 @@ impl SpiPins {
     pub fn set_ss(&self, active: bool) {
         self.ss.write(!active); // Active = LOW (0), Inactive = HIGH (1)
     }
+
+    /// Réinitialise les broches SPI à un état sûr
+    pub fn reset(&self) {
+        self.mosi.write(false);
+        self.sck.write(false);
+        self.set_ss(false);
+    }
 }
