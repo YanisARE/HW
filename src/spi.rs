@@ -1,3 +1,4 @@
+use core::ptr;
 pub struct Spi {
     spcr: *mut u8,   // SPI Control Register
     spsr: *mut u8,   // SPI Status Register
