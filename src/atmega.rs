@@ -58,14 +58,14 @@ pub extern "C" fn main() -> ! {
         }
 
         // Test SPI : transmission et réception
-        spi_pins.set_ss(true); // Activer l'esclave SPI
-        let data_to_send = 0x55; // Exemple de données à transmettre
-        spi.transmit(data_to_send); // Transmettez une donnée
-        let spi_received = spi.receive(); // Recevez la réponse
-        spi_pins.set_ss(false); // Désactiver l'esclave SPI
+        //spi_pins.set_ss(true); // Activer l'esclave SPI
+        //let data_to_send = 0x55; // Exemple de données à transmettre
+        //spi.transmit(data_to_send); // Transmettez une donnée
+        //let spi_received = spi.receive(); // Recevez la réponse
+        //spi_pins.set_ss(false); // Désactiver l'esclave SPI
 
         // Envoyer les données SPI reçues via USART pour vérification
-        usart.transmit(spi_received);
+        //usart.transmit(spi_received);
 
         // Pause avant la prochaine itération
         delay_ms(200);
