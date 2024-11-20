@@ -2,9 +2,12 @@
 #![no_main]
 
 mod gpio;
-mod usart; // Importer le module usart
+mod usart; // Importer le module USART
+mod spi;   // Importer le module SPI
+
 use gpio::{GpioPin, PinMode};
 use usart::Usart; // Importer la structure Usart
+use spi::Spi;     // Importer la structure Spi
 
 use cortex_m_semihosting::hprintln;
 use cortex_m_rt::entry;
@@ -16,7 +19,7 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {
 
 #[entry]
 fn main() -> ! {
-    hprintln!("Welcome to our Rust program with USART!\n").ok();
+    hprintln!("Welcome to our Rust program with USART and SPI!\n").ok();
 
     // Définitions des registres pour le PORTB et DDRB
     const PORTB: *mut u8 = 0x25 as *mut u8; // Adresse du registre PORTB
@@ -28,6 +31,20 @@ fn main() -> ! {
 
     // Initialisation de l'USART avec une vitesse de transmission (par exemple 9600 baud)
     let usart = Usart::new(103); // 103 correspond à UBRR pour 9600 baud avec un Fosc de 16 MHz
+
+    // Initialisation de SPI en mode maître
+    let spi = Spi::new();
+    spi.init_master();
+    hprintln!("SPI initialized as Master").ok();
+
+    // Transmission SPI (en boucle pour test)
+    let test_data = 0xAA; // Exemple : envoyer 0xAA
+    hprintln!("Transmitting test data via SPI: {:X}", test_data).ok();
+    spi.transmit(test_data);
+
+    // Réception SPI (boucle fermée pour simuler le retour)
+    let received_data = spi.receive();
+    hprintln!("Received data via SPI: {:X}", received_data).ok();
 
     // Boucle principale
     loop {
@@ -59,6 +76,13 @@ fn main() -> ! {
         } else {
             usart.transmit(b'x'); // Si aucune donnée n'est reçue, renvoie 'x'
         }
+
+        // Test SPI à chaque itération
+        hprintln!("Testing SPI communication...").ok();
+        let data_to_send = 0x55; // Exemple de données à transmettre
+        spi.transmit(data_to_send);
+        let spi_received = spi.receive();
+        hprintln!("SPI sent: {:X}, received: {:X}", data_to_send, spi_received).ok();
 
         // Petite pause avant la prochaine itération
         delay_ms(200);
