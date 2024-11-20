@@ -4,11 +4,12 @@
 
 
 mod gpio;
-mod usart;
+mod usart; // Importer le module USART
+mod spi;   // Importer le module SPI
 
 use gpio::{GpioPin, PinMode};
-use usart::Usart;
-
+use usart::Usart; // Importer la structure Usart
+use spi::Spi;     // Importer la structure Spi
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
     loop {}
@@ -25,7 +26,8 @@ pub extern "C" fn main() -> ! {
 
     // Initialisation de l'USART avec une vitesse de 9600 bauds (UBRR = 103 pour 16 MHz)
     let usart = Usart::new(103);
-
+    let spi = Spi::new();
+    spi.init_master();
     output_pin.write(false);
 
     // Boucle principale
@@ -44,6 +46,10 @@ pub extern "C" fn main() -> ! {
         } else {
             usart.transmit(b'x');
         }
+
+        let data_to_send = 0x55; // Exemple de données à transmettre
+        spi.transmit(data_to_send);
+        let spi_received = spi.receive();
 
         delay_ms(200);
 
