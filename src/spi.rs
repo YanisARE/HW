@@ -18,34 +18,20 @@ impl Spi {
     /// Initialiser SPI en mode Master
     pub fn init_master(&self) {
         unsafe {
-            // Configurer le registre SPCR pour activer SPI, mode Master, prescaler = 16
-            ptr::write_volatile(self.spcr, 0b01010001); // SPE=1, MSTR=1, SPR1:SPR0=01
+            ptr::write_volatile(self.spcr, 0b01010001);
+
+            let _ = ptr::read_volatile(self.spsr);
+            let _ = ptr::read_volatile(self.spdr);
         }
     }
 
-    /// Transmettre une donnée via SPI
-    pub fn transmit(&self, data: u8) {
+    /// Transmettre et recevoir une donnée via SPI
+    pub fn spi_transfer(&self, data: u8) -> u8 {
         unsafe {
-            // Écrire dans SPDR pour transmettre les données
             ptr::write_volatile(self.spdr, data);
 
-            // Attendre que la transmission soit terminée (SPIF=1)
             while ptr::read_volatile(self.spsr) & (1 << 7) == 0 {}
 
-            // Vérifier les erreurs (collision par exemple)
-            if ptr::read_volatile(self.spsr) & (1 << 6) != 0 {
-                panic!("SPI collision detected");
-            }
-        }
-    }
-
-    /// Recevoir une donnée via SPI
-    pub fn receive(&self) -> u8 {
-        unsafe {
-            // Transmettre un octet vide pour générer l'horloge
-            self.transmit(0x00);
-
-            // Lire les données reçues dans SPDR
             ptr::read_volatile(self.spdr)
         }
     }

@@ -76,6 +76,7 @@ impl SpiPins {
     pub fn reset(&self) {
         self.mosi.write(false);
         self.sck.write(false);
-        self.set_ss(false);
+        self.set_ss(true); // Désactiver SS par défaut
     }
+
 }

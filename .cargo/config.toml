@@ -1,6 +1,6 @@
 [target.thumbv7em-none-eabihf]
 # uncomment this to make `cargo run` execute programs on QEMU
-runner = "qemu-system-arm -cpu cortex-m4 -machine mps2-an386 -nographic -semihosting-config enable=on,target=native -kernel target/thumbv7em-none-eabihf/debug/thumbv7 -serial /dev/pts/3"
+runner = "qemu-system-arm -cpu cortex-m7 -machine mps2-an386 -nographic -semihosting-config enable=on,target=native -kernel target/thumbv7em-none-eabi/debug/thumbv7 -serial /dev/pts/3"
 
 [target.'cfg(all(target_arch = "arm", target_os = "none"))']
 # uncomment ONE of these three option to make `cargo run` start a GDB session
@@ -30,8 +30,8 @@ rustflags = [
 # Pick ONE of these default compilation targets
 # target = "thumbv6m-none-eabi"        # Cortex-M0 and Cortex-M0+
 # target = "thumbv7m-none-eabi"        # Cortex-M3
-# target = "thumbv7em-none-eabi"       # Cortex-M4 and Cortex-M7 (no FPU)
-target = "thumbv7em-none-eabihf"     # Cortex-M4F and Cortex-M7F (with FPU)
+target = "thumbv7em-none-eabi"       # Cortex-M4 and Cortex-M7 (no FPU)
+# target = "thumbv7em-none-eabihf"     # Cortex-M4F and Cortex-M7F (with FPU)
 # target = "thumbv8m.base-none-eabi"   # Cortex-M23
 # target = "thumbv8m.main-none-eabi"   # Cortex-M33 (no FPU)
 # target = "thumbv8m.main-none-eabihf" # Cortex-M33 (with FPU)
