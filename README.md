@@ -34,3 +34,12 @@ socat -d -d pty,raw,echo=0 pty,raw,echo=0
 cargo run --bin thumbv7
 putty
 ```
+
+
+
+[CORRECTION USART] (Don't hesitate to remove this part)
+I realise I didn't push the GPIO correction message ! Very sorry about that. Your project seems very clean right now (the message was "You should not use an external HAL.", wich is irrelevant now), I am happy it didn't cause trouble.
+I did evaluate your USART project with this issue in mind.
+It would be better to abstract more your code by dfining variable for memory adresses rather than using them directly in expressions.
+You could try implementing the different USART mode (asynchrone double speed for example) for your Atmega target.
+For your CORTEX M4 target, you could abstract the choice of USART, or the possibility to do asynchronous for example.
