@@ -1,3 +1,4 @@
+//usart.rs
 #[cfg(target_arch = "avr")] // Spécifique à l'architecture AVR
 pub struct Usart {
     ubrrh: *mut u8,

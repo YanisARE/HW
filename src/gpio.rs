@@ -1,3 +1,4 @@
+//gpio.rs
 pub struct GpioPin {
     port: *mut u8, // Pointeur vers le registre PORT
     ddr: *mut u8,  // Pointeur vers le registre DDR
