@@ -1,4 +1,4 @@
-//spi.rs
+// spi.rs
 use core::ptr;
 
 pub struct Spi {
@@ -10,13 +10,13 @@ pub struct Spi {
 impl Spi {
     pub fn new() -> Self {
         Spi {
-            spcr: 0x4C as *mut u8, // Adresse du registre SPCR
-            spsr: 0x4D as *mut u8, // Adresse du registre SPSR
-            spdr: 0x4E as *mut u8, // Adresse du registre SPDR
+            spcr: 0x4C as *mut u8, // address of the SPCR register
+            spsr: 0x4D as *mut u8, // address of the SPSR register
+            spdr: 0x4E as *mut u8, // address of the SPDR register
         }
     }
 
-    /// Initialiser SPI en mode Master
+    /// initialize SPI in Master mode
     pub fn init_master(&self) {
         unsafe {
             ptr::write_volatile(self.spcr, 0b01010001);
@@ -26,7 +26,7 @@ impl Spi {
         }
     }
 
-    /// Transmettre et recevoir une donnée via SPI
+    /// transmit and receive data via SPI
     pub fn spi_transfer(&self, data: u8) -> u8 {
         unsafe {
             ptr::write_volatile(self.spdr, data);

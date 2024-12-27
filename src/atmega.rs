@@ -3,15 +3,15 @@
 #![feature(asm_experimental_arch)]
 
 mod gpio;
-mod usart; // Importer le module USART
+mod usart; // import the USART module
 mod spi;
-mod i2c; // Importer le module I2C
-// Importer le module SPI
+mod i2c; // import the I2C module
+// import the SPI module
 
-use gpio::{GpioPin, PinMode, SpiPins}; // Ajout de SpiPins
-use usart::Usart; // Importer la structure Usart
-use spi::Spi;     // Importer la structure Spi
-use i2c::I2c;     // Importer la structure I2C
+use gpio::{GpioPin, PinMode, SpiPins}; // add SpiPins
+use usart::Usart; // import the Usart structure
+use spi::Spi;     // import the Spi structure
+use i2c::I2c;     // import the I2C structure
 
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
@@ -19,34 +19,34 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {
 }
 
 pub extern "C" fn main() -> ! {
-    const PORTB: *mut u8 = 0x25 as *mut u8; // Adresse du registre PORTB
-    const DDRB: *mut u8 = 0x24 as *mut u8;  // Adresse du registre DDRB
+    const PORTB: *mut u8 = 0x25 as *mut u8; // address of the PORTB register
+    const DDRB: *mut u8 = 0x24 as *mut u8;  // address of the DDRB register
 
-    // Initialisation des broches SPI
+    // initialize SPI pins
     let spi_pins = SpiPins::new(PORTB, DDRB);
 
-    // Initialisation de l'USART avec une vitesse de 9600 bauds (UBRR = 103 pour 16 MHz)
+    // initialize USART with a baud rate of 9600 (UBRR = 103 for 16 MHz)
     let usart = Usart::new(103);
 
-    // Initialisation de SPI en mode maître
+    // initialize SPI in master mode
     let spi = Spi::new();
     spi.init_master();
 
-    // Initialisation de l'I2C
+    // initialize I2C
     let i2c = I2c::new();
-    i2c.init(); // Initialise l'I2C
+    i2c.init(); // initialize I2C
 
-    spi_pins.reset(); // Réinitialisation des broches SPI
+    spi_pins.reset(); // reset SPI pins
 
     loop {
-        // Test SPI : transmission et réception
-        spi_pins.set_ss(false); // Activer l'esclave SPI
+        // SPI test: transmit and receive
+        spi_pins.set_ss(false); // activate the SPI slave
         delay_ms(50);
 
-        // Transmettre une donnée et attendre la réponse
+        // transmit data and wait for the response
         let received_data = spi.spi_transfer(b'H');
 
-        // Vérifier que la donnée reçue est valide
+        // check if the received data is valid
         if received_data != 0xFF {
             usart.transmit(received_data);
         } else {
@@ -54,42 +54,42 @@ pub extern "C" fn main() -> ! {
         }
 
         delay_ms(50);
-        spi_pins.set_ss(true); // Désactiver l'esclave SPI
+        spi_pins.set_ss(true); // deactivate the SPI slave
 
-        // Envoi d'un caractère via USART pour vérification
+        // send a character via USART for verification
         usart.transmit(b'H');
-        delay_ms(1000); // Délai de 1 seconde avant la prochaine itération
+        delay_ms(1000); // delay 1 second before the next iteration
 
-        // Test I2C
+        // I2C test
         if test_i2c(&i2c) {
-            usart.transmit(b'I'); // Si le test I2C est réussi, transmettre 'I'
+            usart.transmit(b'I'); // if I2C test is successful, transmit 'I'
         } else {
-            usart.transmit(b'E'); // Si le test échoue, transmettre 'E'
+            usart.transmit(b'E'); // if test fails, transmit 'E'
         }
 
-        delay_ms(1000); // Délai de 1 seconde avant le prochain test I2C
+        delay_ms(1000); // delay 1 second before the next I2C test
     }
 }
 
-/// Délai approximatif en millisecondes (basé sur un F_CPU de 16 MHz)
+/// approximate delay in milliseconds (based on F_CPU of 16 MHz)
 fn delay_ms(ms: u16) {
     for _ in 0..ms {
         for _ in 0..1000 {
-            unsafe { core::arch::asm!("nop") }; // NOP pour ralentir l'exécution
+            unsafe { core::arch::asm!("nop") }; // NOP to slow down execution
         }
     }
 }
 
-/// Fonction de test de l'I2C : essaie d'écrire et de lire une donnée
+/// I2C test function: tries to write and read data
 fn test_i2c(i2c: &I2c) -> bool {
-    const I2C_SLAVE_ADDR: u8 = 0x50; // Adresse fictive de l'esclave I2C (à adapter)
+    const I2C_SLAVE_ADDR: u8 = 0x50; // fake I2C slave address (to be adjusted)
 
-    // Essai d'écriture d'une donnée (par exemple, 0x55) sur l'esclave I2C
+    // try writing data (e.g., 0x55) to the I2C slave
     i2c.write(I2C_SLAVE_ADDR, 0x55);
 
-    // Essai de lecture d'une donnée de l'esclave I2C
+    // try reading data from the I2C slave
     let received_data = i2c.read(I2C_SLAVE_ADDR);
 
-    // Vérifier que la donnée reçue correspond à la donnée envoyée
+    // check if the received data matches the sent data
     received_data == 0x55
 }

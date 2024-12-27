@@ -1,5 +1,5 @@
-//usart.rs
-#[cfg(target_arch = "avr")] // Spécifique à l'architecture AVR
+// usart.rs
+#[cfg(target_arch = "avr")] // specific to AVR architecture
 pub struct Usart {
     ubrrh: *mut u8,
     ubrrl: *mut u8,
@@ -10,7 +10,7 @@ pub struct Usart {
 
 #[cfg(target_arch = "avr")]
 impl Usart {
-    /// Initialise l'USART avec une vitesse de transmission donnée (ATmega328P)
+    /// initialize the USART with a given baud rate (ATmega328P)
     pub fn new(ubrr_value: u16) -> Self {
         let usart = Usart {
             ubrrh: 0xC5 as *mut u8, // UBRR0H
@@ -23,65 +23,65 @@ impl Usart {
         unsafe {
             *usart.ubrrh = (ubrr_value >> 8) as u8;
             *usart.ubrrl = ubrr_value as u8;
-            *usart.ucsrb |= (1 << 3) | (1 << 4); // Active la transmission et réception
+            *usart.ucsrb |= (1 << 3) | (1 << 4); // enable transmission and reception
         }
 
         usart
     }
 
-    /// Transmet un octet via USART
+    /// transmit a byte via USART
     pub fn transmit(&self, data: u8) {
         unsafe {
-            // Attente que le registre de données soit vide
-            while (*self.ucsra & (1 << 5)) == 0 {} // Attente du bit UDRE0
+            // wait until the data register is empty
+            while (*self.ucsra & (1 << 5)) == 0 {} // wait for UDRE0 bit
 
-            // Transmission des données
+            // transmit the data
             *self.udr = data;
         }
     }
 
-    /// Reçoit un octet via USART
+    /// receive a byte via USART
     pub fn receive(&self, timeout_ms: u16) -> Option<u8> {
         let mut elapsed = 0;
 
         unsafe {
-            // Attendre jusqu'à ce que des données soient disponibles ou jusqu'au dépassement du délai
+            // wait until data is available or timeout is reached
             while (*self.ucsra & (1 << 7)) == 0 {
-                delay_ms(10); // Attendre 1 ms
+                delay_ms(10); // wait 1 ms
                 elapsed += 1;
 
                 if elapsed >= timeout_ms {
-                    return None; // Retourne `None` si le délai est dépassé
+                    return None; // return `None` if timeout is reached
                 }
             }
 
-            // Si des données sont disponibles, les lire et les retourner
+            // if data is available, read and return it
             Some(*self.udr)
         }
     }
 }
 
-#[cfg(target_arch = "arm")] // Spécifique à l'architecture ARM (STM32 ou autre Cortex-M)
+#[cfg(target_arch = "arm")] // specific to ARM architecture (STM32 or other Cortex-M)
 pub struct Usart {
-    usart_base: *mut u32,  // Adresse de base pour l'USART
+    usart_base: *mut u32,  // base address for USART
 }
 
 #[cfg(target_arch = "arm")]
 impl Usart {
-    /// Initialise l'USART avec une vitesse de transmission donnée (pour ARM Cortex-M)
+    /// initialize the USART with a given baud rate (for ARM Cortex-M)
     pub fn new(ubrr_value: u16) -> Self {
         let usart = Usart {
-            usart_base: 0x40011000 as *mut u32, // Exemple : base address de USART1 sur STM32F4
+            usart_base: 0x40011000 as *mut u32, // example: base address of USART1 on STM32F4
         };
 
         unsafe {
-            let cr1 = usart.usart_base.offset(0x0C / 4); // Offset correct pour le registre CR1
-            let brr = usart.usart_base.offset(0x08 / 4); // Offset correct pour le registre BRR
+            let cr1 = usart.usart_base.offset(0x0C / 4); // correct offset for CR1 register
+            let brr = usart.usart_base.offset(0x08 / 4); // correct offset for BRR register
 
-            // Configurer le registre BRR pour le baud rate
+            // configure the BRR register for baud rate
             *brr = ubrr_value as u32;
 
-            // Configuration des bits pour activer la réception et la transmission
+            // configure bits to enable reception and transmission
             *cr1 |= (1 << 13); // UE: USART Enable
             *cr1 |= (1 << 3);  // TE: Transmitter Enable
             *cr1 |= (1 << 2);  // RE: Receiver Enable
@@ -90,52 +90,48 @@ impl Usart {
         usart
     }
 
-    /// Transmet un octet via USART
+    /// transmit a byte via USART
     pub fn transmit(&self, data: u8) {
         unsafe {
-            let sr = self.usart_base.offset(0x00 / 4); // Offset pour le registre SR
-            let dr = self.usart_base.offset(0x04 / 4); // Offset pour le registre DR
+            let sr = self.usart_base.offset(0x00 / 4); // offset for SR register
+            let dr = self.usart_base.offset(0x04 / 4); // offset for DR register
 
-            // Attente que le registre de données soit vide (TXE)
-            while (*sr & (1 << 7)) == 0 {} // Vérifier le bit TXE (Transmitter Empty)
+            // wait until the data register is empty (TXE)
+            while (*sr & (1 << 7)) == 0 {} // check TXE bit (Transmitter Empty)
 
-            // Transmission des données
+            // transmit the data
             *dr = data as u32;
-
-
         }
     }
 
-
-    /// Reçoit un octet via USART
+    /// receive a byte via USART
     pub fn receive(&self, timeout_ms: u16) -> Option<u8> {
         let mut elapsed = 0;
 
         unsafe {
-            let sr = self.usart_base.offset(0x00 / 4); // Offset correct pour le registre SR
-            let dr = self.usart_base.offset(0x04 / 4); // Offset correct pour le registre DR
+            let sr = self.usart_base.offset(0x00 / 4); // correct offset for SR register
+            let dr = self.usart_base.offset(0x04 / 4); // correct offset for DR register
 
-            // Attente jusqu'à ce que des données soient disponibles ou jusqu'au dépassement du délai
-            while (*sr & (1 << 5)) == 0 {  // Vérifier le bit RXNE (Receiver Not Empty)
-                delay_ms(10); // Attente de 1 ms
+            // wait until data is available or timeout is reached
+            while (*sr & (1 << 5)) == 0 {  // check RXNE bit (Receiver Not Empty)
+                delay_ms(10); // wait 1 ms
                 elapsed += 1;
 
                 if elapsed >= timeout_ms {
-                    return None; // Retourne `None` si le délai est dépassé
+                    return None; // return `None` if timeout is reached
                 }
             }
 
-            // Lire les données disponibles et les retourner
+            // read the available data and return it
             Some(*dr as u8)
         }
     }
 }
 
-
 fn delay_ms(ms: u16) {
     for _ in 0..ms {
         for _ in 0..1000 {
-            unsafe { core::arch::asm!("nop") }; // NOP pour ralentir l'exécution
+            unsafe { core::arch::asm!("nop") }; // NOP to slow down execution
         }
     }
 }
