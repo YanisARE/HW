@@ -43,3 +43,10 @@ I did evaluate your USART project with this issue in mind.
 It would be better to abstract more your code by dfining variable for memory adresses rather than using them directly in expressions.
 You could try implementing the different USART mode (asynchrone double speed for example) for your Atmega target.
 For your CORTEX M4 target, you could abstract the choice of USART, or the possibility to do asynchronous for example.
+
+[CORRECTION SPI] (don't hesitate to remove this part)
+You didn't implement the SPI feature for your CORTEX M7 target.
+For your ATMEGA target, you didn't implement the reception part of the SPI feature.
+You should also implement the peripheral/slave mode as well (not only the controler/master mode).
+You could abstract more the register content, for example 0b01010001 is not very explicit, you may want to customize your parameters more accurately (therefore you could use more freely all the part of your registers CPOL, CPHA, BR, MSTR...).
+Your SPI feature is fit for the ATMEGA target, but you didn't put conditionnal compilation for this feature (as you did for your USART feature for example). Therefore, the code can be compiled for the CORTEX target, even though it is designed for the ATMEGA target (with ATMEGA specific registers and logic).
